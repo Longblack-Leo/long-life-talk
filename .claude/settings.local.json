@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(PORT=3777 node server.js)",
+      "Bash(kill %1)",
+      "Bash(pkill -f \"node server.js\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(xargs kill -9)",
+      "Bash(node -c server.js)",
+      "Bash(node -e \"require.resolve\\('socket.io-client'\\); console.log\\('client available'\\)\")",
+      "Bash(rm -f /tmp/llt_test.log; echo cleaned)",
+      "Bash(node --check public/js/admin.js)",
+      "Bash(node --check public/js/group.js)",
+      "Bash(node --check public/js/stage.js)",
+      "Bash(ADMIN_PORT=3010 PUBLIC_PORT=3015 node server.js)",
+      "Bash(kill -9 3442)",
+      "Bash(lsof -tiTCP:3010 -sTCP:LISTEN)",
+      "Bash(lsof -tiTCP:3015 -sTCP:LISTEN)",
+      "Bash(echo \"=== POST \\(JSON, follow redirects\\) ===\")",
+      "Bash(curl -sS -L -i -X POST https://script.google.com/macros/s/AKfycbwcc60hEGj3RnZtiMnZylvzUEzEb-ATQfAHdTVTk2RSHYz0bN3KLapOuqNxNnN3mfidRw/exec -H 'Content-Type: application/json' -d '{\"question\":\"테스트 질문\",\"group\":\"3조\",\"text\":\"아카이빙 테스트입니다\",\"time\":\"2026-06-12 14:00:00\"}' --max-time 30)",
+      "Bash(curl -sS -L -o /dev/null -w 'final_http=%{http_code} redirects=%{num_redirects}\\\\n' https://script.google.com/macros/s/AKfycbwcc60hEGj3RnZtiMnZylvzUEzEb-ATQfAHdTVTk2RSHYz0bN3KLapOuqNxNnN3mfidRw/exec --max-time 30)",
+      "Bash(curl -sS -o /dev/null -D - https://script.google.com/macros/s/AKfycbwcc60hEGj3RnZtiMnZylvzUEzEb-ATQfAHdTVTk2RSHYz0bN3KLapOuqNxNnN3mfidRw/exec --max-time 30)",
+      "Bash(curl -sS -L https://script.google.com/macros/s/AKfycbwcc60hEGj3RnZtiMnZylvzUEzEb-ATQfAHdTVTk2RSHYz0bN3KLapOuqNxNnN3mfidRw/exec --max-time 30)",
+      "Bash(export TESTURL=\"https://script.google.com/macros/s/AKfycbwcc60hEGj3RnZtiMnZylvzUEzEb-ATQfAHdTVTk2RSHYz0bN3KLapOuqNxNnN3mfidRw/exec\")",
+      "Bash(node -e ' *)",
+      "Bash(node -e 'console.log\\(\"node\",process.version,\"| fetch:\",typeof fetch\\); try{console.log\\(\"URL ok:\", new URL\\(process.env.U\\).href\\)}catch\\(e\\){console.log\\(\"URL parse err:\",e.message\\)}' U=\"https://script.google.com/macros/s/AKfycbwcc60hEGj3RnZtiMnZylvzUEzEb-ATQfAHdTVTk2RSHYz0bN3KLapOuqNxNnN3mfidRw/exec\")"
+    ]
+  }
+}

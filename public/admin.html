@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Long Life Talk · 어드민</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<link rel="stylesheet" href="/css/common.css" />
+<style>
+  body {
+    min-height: 100%;
+    background: var(--paper);
+    display: flex; flex-direction: column;
+  }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 28px; border-bottom: 1px solid var(--line); background: var(--white);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .topbar .brand { font-family: var(--serif); font-size: 1rem; }
+  .topbar .brand b { color: var(--gold); }
+  .topbar .right { display: flex; align-items: center; gap: 20px; font-size: 0.85rem; color: var(--muted); }
+  .conn { display: flex; align-items: center; gap: 8px; }
+
+  .layout {
+    flex: 1; display: grid; gap: 24px;
+    grid-template-columns: 380px 1fr;
+    padding: 24px 28px 48px;
+    max-width: 1320px; width: 100%; margin: 0 auto;
+  }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--white); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow);
+  }
+  .card + .card { margin-top: 20px; }
+  .card h3 {
+    font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 16px; font-weight: 700;
+  }
+
+  /* 현재 질문 */
+  .cur-q {
+    font-family: var(--serif); font-size: 1.3rem; line-height: 1.35;
+    padding: 14px 16px; background: var(--paper-2); border-radius: 10px;
+    border-left: 3px solid var(--gold); margin-bottom: 18px;
+  }
+  .presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .chip {
+    font-size: 0.82rem; padding: 8px 12px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--white); color: var(--ink-soft);
+    transition: all 0.15s; text-align: left;
+  }
+  .chip:hover { border-color: var(--gold); color: var(--gold); }
+  .q-input-row { display: flex; gap: 8px; }
+  .q-input-row input {
+    flex: 1; padding: 11px 13px; border: 1px solid var(--line);
+    border-radius: 9px; font-size: 0.95rem; outline: none;
+  }
+  .q-input-row input:focus { border-color: var(--gold); }
+  .btn {
+    padding: 11px 18px; border-radius: 9px; font-weight: 600; font-size: 0.9rem;
+    background: var(--ink); color: var(--paper); white-space: nowrap;
+    transition: transform 0.12s, opacity 0.2s;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn.ghost { background: transparent; color: var(--ink-soft); border: 1px solid var(--line); }
+  .btn.ghost:hover { border-color: var(--gold); color: var(--gold); }
+  .btn.danger { background: transparent; color: var(--danger); border: 1px solid #e3c8bf; }
+  .btn.sm { padding: 7px 12px; font-size: 0.8rem; }
+
+  /* 설정 토글 */
+  .setting { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; }
+  .setting:not(:last-child) { border-bottom: 1px solid var(--paper-2); }
+  .setting .label { font-size: 0.92rem; }
+  .setting .label small { display: block; color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+  .seg button { padding: 7px 14px; font-size: 0.82rem; background: var(--white); color: var(--muted); }
+  .seg button.active { background: var(--ink); color: var(--paper); }
+  .switch { width: 46px; height: 26px; border-radius: 999px; background: var(--line); position: relative; transition: background 0.2s; }
+  .switch::after { content:""; position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%; background:#fff; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+  .switch.on { background: var(--sage); }
+  .switch.on::after { transform: translateX(20px); }
+  .stepper { display: inline-flex; align-items: center; gap: 10px; }
+  .stepper button { width: 30px; height: 30px; border: 1px solid var(--line); border-radius: 8px; font-size: 1.1rem; }
+  .stepper button:disabled { opacity: 0.35; cursor: not-allowed; }
+  .stepper span { font-family: var(--serif); font-size: 1.1rem; min-width: 24px; text-align: center; }
+
+  /* 조 접속 현황 */
+  .groups-status { display: flex; flex-wrap: wrap; gap: 8px; }
+  .gchip {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 11px; border-radius: 999px; font-size: 0.82rem;
+    border: 1px solid var(--line); color: var(--muted);
+  }
+  .gchip.on { color: var(--ink); border-color: var(--sage); }
+
+  .stage-actions { display: flex; gap: 10px; }
+
+  /* 시상 스포트라이트 */
+  .focus-hint { font-size: 0.8rem; color: var(--muted); line-height: 1.45; margin-bottom: 12px; }
+  .focus-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); gap: 8px; margin-bottom: 12px; }
+  .focus-btn {
+    aspect-ratio: 1.4 / 1; border: 1px solid var(--line); border-radius: 10px;
+    background: var(--white); font-weight: 700; font-size: 1rem; color: var(--ink-soft);
+    transition: all 0.15s;
+  }
+  .focus-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .focus-btn.active { background: var(--gold); color: #fff; border-color: var(--gold); box-shadow: 0 4px 14px -4px var(--gold); }
+  .focus-all { width: 100%; }
+  .focus-all.active { border-color: var(--sage); color: var(--ink); }
+
+  /* 답변 피드 (조별) */
+  .feed-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .feed-head h2 { font-family: var(--serif); font-size: 1.4rem; }
+  .feed-head .live { font-size: 0.84rem; color: var(--muted); }
+  .feed-head .live b { color: var(--sage); }
+
+  .group-cols {
+    display: grid; gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+  .gcol { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .gcol-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 14px; border-bottom: 1px solid var(--paper-2); background: var(--paper-2);
+  }
+  .gcol-head .gname { font-family: var(--serif); font-weight: 700; font-size: 1.05rem; }
+  .gcol-head .gname .dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; vertical-align: middle; }
+  .gcol-head .gcount { font-size: 0.76rem; color: var(--muted); }
+  .gcol-body { padding: 10px; display: flex; flex-direction: column; gap: 8px; max-height: 360px; overflow-y: auto; }
+  .gcol-empty { padding: 18px 10px; text-align: center; color: var(--muted); font-size: 0.82rem; }
+
+  .ans {
+    border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px;
+    animation: rise 0.3s ease both; background: var(--white);
+  }
+  .ans.featured { border-color: var(--gold); background: #fdf8ec; box-shadow: inset 0 0 0 1px var(--gold); }
+  .ans .meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+  .ans .time { font-size: 0.72rem; color: var(--muted); }
+  .ans .on-stage { font-size: 0.7rem; color: var(--gold); font-weight: 700; letter-spacing: 0.04em; }
+  .ans .body { font-size: 0.95rem; line-height: 1.4; margin-bottom: 10px; overflow-wrap: anywhere; }
+  .ans .actions { display: flex; gap: 6px; }
+  .ans .actions .btn { flex: 1; }
+
+  .empty-feed { padding: 60px 20px; text-align: center; color: var(--muted); }
+  .empty-feed p { font-family: var(--serif); font-size: 1.2rem; margin-top: 8px; }
+
+  #offline {
+    position: fixed; top: 70px; right: 24px;
+    background: var(--danger); color: #fff; padding: 9px 18px; border-radius: 999px;
+    font-size: 0.85rem; opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  }
+  #offline.show { opacity: 1; }
+</style>
+</head>
+<body class="grain">
+  <div class="topbar">
+    <div class="brand">Long Life <b>Talk</b> · 어드민 콘솔</div>
+    <div class="right">
+      <span>무대 노출 <b id="featuredCount" style="color:var(--sage)">0</b></span>
+      <span class="conn"><span class="status-dot" id="dot"></span><span id="connText">연결 중…</span></span>
+    </div>
+  </div>
+
+  <div class="layout">
+    <!-- 좌측 컨트롤 -->
+    <div class="controls">
+      <div class="card">
+        <h3>현재 질문</h3>
+        <div class="cur-q" id="curQ">—</div>
+        <div class="presets" id="presets"></div>
+        <div class="q-input-row">
+          <input id="qInput" type="text" placeholder="직접 질문 입력…" maxlength="120" />
+          <button class="btn" id="setQ">띄우기</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>노출 설정</h3>
+        <div class="setting">
+          <div class="label">노출 모드
+            <small>채택형: 어드민이 고른 답변만 / 자동형: 전송 즉시 무대</small>
+          </div>
+          <div class="seg" id="modeSeg">
+            <button data-mode="moderated" class="active">채택형</button>
+            <button data-mode="auto">자동형</button>
+          </div>
+        </div>
+        <div class="setting">
+          <div class="label">한 조당 1개만 노출
+            <small>새 답변 채택 시 같은 조의 기존 답변은 내림</small>
+          </div>
+          <div class="switch on" id="oneSwitch"></div>
+        </div>
+        <div class="setting">
+          <div class="label">조 개수</div>
+          <div class="stepper">
+            <button id="gMinus">−</button><span id="gCount">7</span><button id="gPlus">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>조 접속 현황</h3>
+        <div class="groups-status" id="groupsStatus"></div>
+      </div>
+
+      <div class="card">
+        <h3>시상 · 한 조 집중 (스포트라이트)</h3>
+        <p class="focus-hint">조를 누르면 무대에 그 조 의견만 크게 나옵니다. 다시 누르거나 ‘전체 보기’로 해제.</p>
+        <div class="focus-grid" id="focusGrid"></div>
+        <button class="btn ghost focus-all" id="focusAll">전체 보기</button>
+      </div>
+
+      <div class="card">
+        <h3>무대 제어</h3>
+        <div class="stage-actions">
+          <button class="btn ghost" id="clearStage">무대 비우기</button>
+          <button class="btn danger" id="resetRound">라운드 리셋</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 우측 답변 피드 -->
+    <div class="feed">
+      <div class="card" style="min-height: 70vh;">
+        <div class="feed-head">
+          <h2>들어온 답변</h2>
+          <span class="live">총 <b id="totalCount">0</b>개 · 무대 <b id="featuredCount2">0</b>개</span>
+        </div>
+        <div id="feed"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="offline">연결이 끊겨 재접속 중입니다…</div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

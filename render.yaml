@@ -1,0 +1,15 @@
+# Render Blueprint — 이 리포지토리를 Render에 배포하기 위한 설정
+# Render 대시보드 > New > Blueprint 에서 이 리포를 연결하면 자동으로 읽힙니다.
+services:
+  - type: web
+    name: long-life-talk
+    runtime: node
+    plan: free            # 행사 당일엔 starter($7/mo)로 올리면 콜드스타트 없이 안정적
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /group
+    envVars:
+      - key: ADMIN_KEY
+        sync: false       # 대시보드에서 직접 입력(비밀값)
+      - key: SHEETS_WEBHOOK_URL
+        sync: false       # 대시보드에서 직접 입력(선택)

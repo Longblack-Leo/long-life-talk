@@ -1,0 +1,82 @@
+/* ============================================================
+   Long Life Talk — 공통 스타일 / 디자인 토큰
+   톤: 에디토리얼 · 무채색 · 따뜻한 골드 액센트
+   ============================================================ */
+
+:root {
+  /* 색 — 핵심 3색: #000000 / #FF4B1F / #D3B18D 위주 */
+  --ink:        #000000;   /* 블랙 */
+  --ink-soft:   #2c2a26;
+  --paper:      #faf4ec;   /* 탠톤 크림 페이퍼 */
+  --paper-2:    #efe3d2;
+  --line:       #ddcab0;   /* 탠 라인 */
+  --gold:       #FF4B1F;   /* 메인 액센트 (오렌지) */
+  --gold-soft:  #ff7a52;   /* 소프트 오렌지 */
+  --tan:        #D3B18D;   /* 탠 */
+  --sage:       #b5895a;   /* 보조 (브라운/탠) */
+  --muted:      #9a8c76;
+  --white:      #fffaf3;
+  --danger:     #FF4B1F;
+
+  /* 폰트 — Pretendard 단일 (CDN 실패 시 시스템 폰트로 폴백) */
+  --sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+          "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", system-ui, sans-serif;
+  --serif: var(--sans);
+
+  --radius: 14px;
+  --shadow: 0 10px 40px -12px rgba(22, 20, 15, 0.28);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: var(--sans);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button, input, textarea, select {
+  font-family: inherit;
+  color: inherit;
+}
+
+button { cursor: pointer; border: none; background: none; }
+
+/* 종이 질감 느낌의 미세한 노이즈 (배경) */
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* 작은 라벨 (워드마크/오버라인) */
+.overline {
+  font-family: var(--serif);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: var(--gold);
+}
+
+/* 접속 상태 점 */
+.status-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition: background 0.3s;
+}
+.status-dot.on  { background: var(--sage); box-shadow: 0 0 0 4px rgba(111,122,90,0.18); }
+.status-dot.off { background: var(--danger); }
+
+/* 부드러운 등장 */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

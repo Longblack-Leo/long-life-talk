@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Long Life Talk · 무대</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<link rel="stylesheet" href="/css/common.css" />
+<style>
+  :root {
+    --stage-bg: #000000;
+    --stage-bg2: #1a0f0a;
+  }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    color: var(--paper);
+    background:
+      radial-gradient(1200px 720px at 82% -12%, var(--stage-bg2), var(--stage-bg)),
+      var(--stage-bg);
+    display: flex; flex-direction: column;
+  }
+
+  /* 질문 */
+  .question-zone {
+    padding: clamp(40px, 6vh, 80px) clamp(40px, 5vw, 90px) clamp(14px, 2.5vh, 34px);
+    flex-shrink: 0;
+  }
+  .q-label { color: var(--gold); font-family: var(--serif); letter-spacing: 0.2em; font-size: 0.9rem; margin-bottom: 14px; }
+  #question {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(2.2rem, 4.6vw, 4.4rem); /* JS가 한 줄에 맞춰 폰트 자동 조정 */
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+    white-space: nowrap;   /* 길어도 줄바꿈 없이 한 줄 */
+    transition: opacity 0.4s;
+  }
+  #question .grad { color: var(--gold-soft); font-style: italic; }
+
+  /* 답변 영역 — 산발적으로 떠오르는 브레인스토밍 캔버스 */
+  .answers-zone {
+    flex: 1; min-height: 0;
+    padding: clamp(10px, 2vh, 24px) clamp(30px, 4vw, 70px) clamp(24px, 3vh, 48px);
+    overflow: hidden;
+  }
+  /* 답변 영역 — 9칸(3×3) 고정 격자. 적게 와도 칸 크기 유지(빈 칸은 비움) */
+  #answers {
+    display: grid;
+    gap: clamp(10px, 1.2vw, 18px);
+    grid-auto-rows: 1fr;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr); /* JS가 모드별로 지정/해제 */
+    height: 100%;
+    width: 100%;
+  }
+
+  /* 각 칸 */
+  .cell {
+    position: relative;
+    display: flex;
+    align-items: center; justify-content: center;
+    min-width: 0; min-height: 0;
+  }
+
+  /* 말풍선: 자기 칸을 가득 채우고, 글씨는 JS가 칸 크기에 맞게 축소 */
+  .bubble {
+    position: relative;
+    width: 100%; height: 100%;
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 18px 18px 18px 4px;
+    padding: clamp(10px, 1vw, 18px) clamp(12px, 1.2vw, 22px);
+    box-shadow: 0 18px 44px -16px rgba(0,0,0,0.7);
+    border-left: 4px solid var(--g, var(--gold));
+    display: flex; flex-direction: column; gap: 6px;
+    overflow: hidden;
+    will-change: transform, opacity;
+    animation: float-in 0.55s cubic-bezier(.2,.9,.3,1.25) both;
+  }
+  @keyframes float-in {
+    from { opacity: 0; transform: translateY(22px) scale(0.92); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  /* 시상 스포트라이트: 강조 */
+  #answers.focus .bubble {
+    box-shadow: 0 0 0 3px var(--g, var(--gold)), 0 24px 60px -16px rgba(0,0,0,0.8);
+  }
+  .bubble.leaving { animation: float-out 0.35s ease forwards; }
+  @keyframes float-out {
+    to { opacity: 0; transform: translateY(-16px) scale(0.92); }
+  }
+
+  .bubble .tag {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-weight: 700;
+    color: var(--g, var(--gold));
+    font-size: clamp(1.4rem, 2.2vw, 2.6rem);
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+  }
+  .bubble .tag::before {
+    content: ""; width: 12px; height: 12px; border-radius: 50%;
+    background: var(--g, var(--gold));
+  }
+  .bubble .text {
+    flex: 1 1 auto;
+    min-height: 0;          /* flex 안에서 넘침 측정이 정확해지도록 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 짧은 답변은 카드 안에서 세로 가운데 */
+    line-height: 1.32;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+    overflow: hidden;       /* 칸을 넘기면 프레임 안에서 잘림(프레임 자체는 보존) */
+    /* font-size 는 JS(fitBubble)가 칸에 맞게 지정 */
+  }
+
+  /* 시상 스포트라이트: 말풍선 꽉 차게, 조 번호·글씨 크게 (사회자 낭독용) */
+  #answers.focus .bubble { padding: clamp(28px, 4vw, 64px); gap: clamp(14px, 2vw, 28px); }
+  #answers.focus .bubble .tag { font-size: clamp(2.2rem, 4.5vw, 4rem); gap: 14px; }
+  #answers.focus .bubble .tag::before { width: 20px; height: 20px; }
+  #answers.focus .bubble .text { line-height: 1.28; font-weight: 600; }
+
+  /* 연결 끊김 토스트 */
+  #offline {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: var(--danger); color: #fff; padding: 10px 22px; border-radius: 999px;
+    font-size: 0.9rem; opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  }
+  #offline.show { opacity: 1; }
+
+  /* 전체화면 버튼 — 흰색으로 눈에 잘 띄게 */
+  #fsBtn {
+    position: fixed; top: 18px; right: 20px; z-index: 50;
+    width: 52px; height: 52px; border-radius: 12px;
+    background: #ffffff;
+    color: #000000;
+    font-size: 1.5rem; line-height: 1;
+    display: grid; place-items: center;
+    box-shadow: 0 6px 20px -6px rgba(0,0,0,0.6);
+    opacity: 1; transition: opacity 0.25s, transform 0.15s;
+  }
+  #fsBtn:hover { transform: translateY(-1px); }
+  /* 유휴 상태(마우스 안 움직임)에서는 커서와 버튼을 숨김 → 마우스 움직이면 다시 표시 */
+  body.idle { cursor: none; }
+  body.idle #fsBtn { opacity: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+  <div class="question-zone">
+    <div class="q-label">Long Life Talk</div>
+    <h1 id="question">—</h1>
+  </div>
+
+  <div class="answers-zone">
+    <div id="answers"></div>
+  </div>
+
+  <div id="offline">연결이 끊겨 재접속 중입니다…</div>
+
+  <button id="fsBtn" title="전체화면 (F)" aria-label="전체화면">⛶</button>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/stage.js"></script>
+</body>
+</html>

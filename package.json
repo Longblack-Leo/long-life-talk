@@ -1,0 +1,17 @@
+{
+  "name": "long-life-talk",
+  "version": "1.0.0",
+  "description": "Long Life Talk - LG x Long Black 오프라인 커뮤니티 커피챗 실시간 보드",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}
