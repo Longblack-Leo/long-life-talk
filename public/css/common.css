@@ -4,19 +4,22 @@
    ============================================================ */
 
 :root {
-  /* 색 — 핵심 3색: #000000 / #FF4B1F / #D3B18D 위주 */
-  --ink:        #000000;   /* 블랙 */
-  --ink-soft:   #2c2a26;
-  --paper:      #faf4ec;   /* 탠톤 크림 페이퍼 */
-  --paper-2:    #efe3d2;
-  --line:       #ddcab0;   /* 탠 라인 */
-  --gold:       #FF4B1F;   /* 메인 액센트 (오렌지) */
-  --gold-soft:  #ff7a52;   /* 소프트 오렌지 */
-  --tan:        #D3B18D;   /* 탠 */
-  --sage:       #b5895a;   /* 보조 (브라운/탠) */
-  --muted:      #9a8c76;
-  --white:      #fffaf3;
-  --danger:     #FF4B1F;
+  /* 색 — 현대자동차 브랜드 팔레트
+     #002c5f 네이비(메인) / #00aad2 시안 / #a36b4f 브라운
+     #f6f3f2 오프화이트 / #e4dcd3 베이지 / #ffffff / #000000 / #aacae6 라이트블루 */
+  --ink:        #000000;   /* 블랙 (본문) */
+  --ink-soft:   #1e2a3a;   /* 네이비 톤 다크 */
+  --paper:      #f6f3f2;   /* 오프화이트 페이퍼 */
+  --paper-2:    #e4dcd3;   /* 웜 베이지 */
+  --line:       #d8d1c7;   /* 뉴트럴 라인 */
+  --gold:       #002c5f;   /* 메인 액센트 (네이비) */
+  --gold-soft:  #00aad2;   /* 밝은 보조 액센트 (시안) */
+  --tan:        #a36b4f;   /* 브라운 */
+  --sage:       #00aad2;   /* 활성/접속 표시 (시안) */
+  --muted:      #7c8698;   /* 쿨 그레이 */
+  --white:      #ffffff;
+  --danger:     #c0392b;   /* 오류(레드) */
+  --hy-lightblue: #aacae6; /* 라이트 블루 */
 
   /* 폰트 — Pretendard 단일 (CDN 실패 시 시스템 폰트로 폴백) */
   --sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
@@ -24,7 +27,7 @@
   --serif: var(--sans);
 
   --radius: 14px;
-  --shadow: 0 10px 40px -12px rgba(22, 20, 15, 0.28);
+  --shadow: 0 10px 40px -12px rgba(0, 44, 95, 0.22);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }

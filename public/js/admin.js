@@ -3,8 +3,8 @@
   const socket = io();
 
   const GROUP_COLORS = [
-    '#b08433', '#6f7a5a', '#a8623f', '#5a6f7a', '#8a5a72',
-    '#7a6a4a', '#4f7a64', '#9a7b3a', '#6a5a7a', '#7a5a4a',
+    '#002c5f', '#00aad2', '#a36b4f', '#1e5b8a', '#007a99',
+    '#6b4a35', '#3a6098', '#0092b8', '#8a5a40', '#26496f',
   ];
   const colorFor = (gid) => GROUP_COLORS[(gid - 1) % GROUP_COLORS.length];
 
