@@ -16,14 +16,16 @@
       radial-gradient(1200px 600px at 50% -10%, var(--paper-2), var(--paper));
     padding: 40px 20px;
   }
-  .wrap { width: min(880px, 100%); }
+  .wrap { width: min(1120px, 100%); }
   header { text-align: center; margin-bottom: 48px; }
   .overline { display: block; margin-bottom: 18px; }
   h1 {
     font-family: var(--serif);
     font-weight: 700;
-    font-size: clamp(2.4rem, 6vw, 4rem);
-    line-height: 1.05;
+    /* 한 줄로 들어가도록 폭에 맞춰 자동 축소 */
+    font-size: clamp(1.05rem, 3.6vw, 3.2rem);
+    white-space: nowrap;
+    line-height: 1.15;
     letter-spacing: -0.01em;
   }
   h1 em { color: var(--gold); font-style: italic; }

@@ -26,15 +26,33 @@
   let answers = [];         // 전체 답변 목록 (도착 순서, featured 플래그 포함)
   let focusGroup = null;    // 시상 스포트라이트: 특정 조만 노출 (null = 전체)
 
-  // ── 질문: 길어도 한 줄에 맞게 폰트 자동 축소 ──────────────
+  // ── 질문 크기 맞춤 ────────────────────────────────────────
+  //  1) 우선 한 줄로 시도 (짧은 질문은 한 줄 유지)
+  //  2) 한 줄이 읽기 힘들 만큼 작아지면 줄바꿈을 허용하고 높이에 맞춰 축소
+  const ONE_LINE_FLOOR = 34; // 한 줄을 포기하는 기준 크기(px)
   function fitQuestion() {
     const el = questionEl;
     if (!el.textContent.trim()) return;
-    let size = Math.min(window.innerWidth * 0.046, 70); // 기존 clamp 최대(=4.4rem)에서 시작
-    if (size < 22) size = 22;
+    const maxSize = Math.max(Math.min(window.innerWidth * 0.046, 70), 22);
+
+    // 1) 한 줄 시도
+    el.style.whiteSpace = 'nowrap';
+    let size = maxSize;
     el.style.fontSize = size + 'px';
-    let guard = 80;
-    while (el.scrollWidth > el.clientWidth && size > 18 && guard-- > 0) {
+    let guard = 100;
+    while (el.scrollWidth > el.clientWidth && size > ONE_LINE_FLOOR && guard-- > 0) {
+      size -= 1.5;
+      el.style.fontSize = size + 'px';
+    }
+    if (el.scrollWidth <= el.clientWidth) return; // 한 줄로 충분히 들어감
+
+    // 2) 한 줄이 너무 작아짐 → 줄바꿈 허용, 질문 영역 높이(화면의 약 24%) 안에서 최대 크기로
+    el.style.whiteSpace = 'normal';
+    const maxH = window.innerHeight * 0.24;
+    size = maxSize;
+    el.style.fontSize = size + 'px';
+    guard = 120;
+    while (el.scrollHeight > maxH && size > 18 && guard-- > 0) {
       size -= 1.5;
       el.style.fontSize = size + 'px';
     }
