@@ -54,7 +54,7 @@ let answerSeq = 0;
 
 let state = {
   question: { id: questionSeq, text: PRESET_QUESTIONS[0] },
-  mode: 'moderated',        // 'moderated'(어드민이 채택해야 무대에 노출) | 'auto'(전송 즉시 무대 노출)
+  mode: 'auto',             // 'moderated'(어드민이 채택해야 무대에 노출) | 'auto'(전송 즉시 무대 노출) — 기본: 자동형
   onePerGroup: true,        // 무대에 한 조당 답변 1개만 노출
   groupCount: 7,            // 조 개수
   focusGroup: null,         // 시상용 스포트라이트: 특정 조만 무대에 노출 (null = 전체)
